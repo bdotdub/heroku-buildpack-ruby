@@ -317,6 +317,9 @@ ERROR
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
 
+        bundler_output << pipe("bundle config build.sqlite3 --with-sqlite3-include=vendor/include --with-sqlite3-lib=vendor/lib")
+        bundler_output << pipe("bundle config")
+
         # need to setup compile environment for the psych gem
         yaml_include   = File.expand_path("#{libyaml_dir}/include")
         yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
