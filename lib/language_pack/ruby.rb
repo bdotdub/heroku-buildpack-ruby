@@ -288,6 +288,13 @@ ERROR
     end
   end
 
+  def install_sqlite3(dir)
+    FileUtils.mkdir_p dir
+    Dir.chdir(dir) do |dir|
+      run("curl #{TIMEHOP_URL}/sqlite3.tgz -s -o - | tar xzf -")
+    end
+  end
+
   # runs bundler to install the dependencies
   def build_bundler
     log("bundle") do
@@ -317,9 +324,12 @@ ERROR
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
 
+        sqlite3_dir = "#{tmpdir}/sqlite3"
+        install_sqlite3(sqlite3_dir)
+
         # need to setup compile environment for the psych gem
-        sqlite3_include   = File.expand_path("/app/vendor/include")
-        sqlite3_lib       = File.expand_path("/app/vendor/lib")
+        sqlite3_include   = File.expand_path("#{sqlite3_dir}/include")
+        sqlite3_lib       = File.expand_path("#{sqlite3_dir}/lib")
         yaml_include   = File.expand_path("#{libyaml_dir}/include")
         yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
         pwd            = run("pwd").chomp
